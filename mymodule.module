@@ -1,0 +1,50 @@
+<?php
+
+function mymodule_block_info() {
+ $blocks = array();
+ $blocks['example_uppercase'] = array(
+    // info: The name of the block.
+    'info' => t('Example: Testing Displaying Records'),
+    'cache' => DRUPAL_NO_CACHE,
+    'region' => 'content',
+    'status' => 1
+  );
+  return $blocks;
+}
+
+function mymodule_block_view($delta = '') {
+  $blocks = array();
+  switch ($delta) {
+    case 'example_uppercase':
+      $blocks = retrieve_last_records();
+      break;
+  }
+  return $blocks;
+}
+
+function retrieve_last_records() {
+
+  $block = array();
+  $block_content = array();
+  $result = db_query('SELECT n.nid, n.title, n.changed FROM {node} n WHERE n.title like :title ORDER BY n.created DESC LIMIT 5', array(':title' => '%Invention%'));
+  
+ foreach ($result as $record) {
+	$info = node_load($record->nid);
+	$summary = $info->body[LANGUAGE_NONE][0]['summary'];
+	$block_content[] = array('Title' => $record->title, 'Changed' => format_date($record->changed, 'Y-m-d H:i:s'), 'Summary' => $summary);
+      	$block['subject'] = t('Current posts');
+	$block['content'] = theme('mymodule',array('articles' => $block_content)); 
+  }
+  return $block;
+}
+
+//implementation of hook_theme
+function mymodule_theme() {
+  return array(
+    'mymodule' => array(
+      'template' => 'mymodule',
+      'variables' => array('articles' => array() )
+    ),
+  );
+}
+

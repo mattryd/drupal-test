@@ -1,0 +1,4 @@
+name = Block Example
+description = Test for the site
+core = 7.x
+package = mymodule
