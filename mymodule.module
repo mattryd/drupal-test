@@ -2,7 +2,7 @@
 
 function mymodule_block_info() {
  $blocks = array();
- $blocks['example_uppercase'] = array(
+ $blocks['mymodule_articles'] = array(
     // info: The name of the block.
     'info' => t('Example: Testing Displaying Records'),
     'cache' => DRUPAL_NO_CACHE,
@@ -15,7 +15,7 @@ function mymodule_block_info() {
 function mymodule_block_view($delta = '') {
   $blocks = array();
   switch ($delta) {
-    case 'example_uppercase':
+    case 'mymodule_articles':
       $blocks = retrieve_last_records();
       break;
   }
